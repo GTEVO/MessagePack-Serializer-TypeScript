@@ -1,4 +1,4 @@
-# MessagePackSerializer-Ts
+# MessagePackSerializer-TS
 MessagePack TS版，与C#版本  [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp) 对应（仅供学习、研究使用）
 
 aspnetcore: dotnet5
