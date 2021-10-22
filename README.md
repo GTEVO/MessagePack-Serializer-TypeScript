@@ -1,5 +1,5 @@
 # MessagePackSerializer-Ts
-MessagePack TS版，与C#版本  MessagePack-CSharp 对应
+MessagePack TS版，与C#版本  MessagePack-CSharp 对应（仅供学习、研究使用）
 
 dependencies：@msgpack/msgpack
 
@@ -8,7 +8,6 @@ dependencies：@msgpack/msgpack
 2、支持继承
 
 # 示例说明
-
 包含2个示例：
     
     Test4Ts.ts 演示了对象在客户端使用 msgpack 序列化/反序列化
