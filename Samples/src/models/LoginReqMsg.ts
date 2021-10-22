@@ -4,11 +4,14 @@ import { BaseMsg } from "./BaseMsg";
 @MessagePackObject()
 export class LoginReqMsg extends BaseMsg {
 
-    constructor() {
-        super();
-        this.Account = 'default';
-    }
+    //  连续key
+
+    @Key(1)
+    account: string | null = null;
 
     @Key(2)
-    Account: string;
+    password: string | null = null;
+
+    @Key(3)
+    token: string | null = null;
 }
