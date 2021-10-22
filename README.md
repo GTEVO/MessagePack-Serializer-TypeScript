@@ -1,9 +1,9 @@
 # MessagePackSerializer-Ts
-MessagePack TS版，与C#版本  MessagePack-CSharp 对应（仅供学习、研究使用）
+MessagePack TS版，与C#版本  [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp) 对应（仅供学习、研究使用）
 
 aspnetcore: dotnet5
 
-ts dependencies：@msgpack/msgpack
+ts dependencies：[@msgpack/msgpack](https://www.npmjs.com/package/@msgpack/msgpack)
 
 1、在Int Key 的模式下，序列化、反序列化 MessagePack-CSharp的格式
 
