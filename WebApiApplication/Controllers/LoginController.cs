@@ -1,14 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MessagePack;
 
 namespace WebApiApplication.Controllers
 {
+    [MessagePackObject]
+    public struct LoginReqMsg
+    {
+        [Key(0)] public int Id;
+
+        [Key(1)] public string Account;
+
+        [Key(2)] public string Password;
+
+        [Key(3)] public string Token;
+    }
+
     [MessagePackObject]
     public struct LoginRspMsg
     {
@@ -26,7 +35,7 @@ namespace WebApiApplication.Controllers
     public class LoginController : ControllerBase
     {
         [HttpGet]
-        public void Login([FromQuery] string account, [FromQuery] string pwd)
+        public async Task Login([FromQuery] string account, [FromQuery] string pwd)
         {
             var rsp = new LoginRspMsg() {
                 Id = 16,
@@ -35,7 +44,25 @@ namespace WebApiApplication.Controllers
                 Token = null,
             };
             var bytes = MessagePackSerializer.Serialize(rsp);
-            HttpContext.Response.BodyWriter.Write(new ReadOnlySpan<byte>(bytes));
+            await HttpContext.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(bytes));
+        }
+
+        [HttpPost]
+        public async Task LoginBin()
+        {
+            var resultResult = await HttpContext.Request.BodyReader.ReadAsync();
+            await HttpContext.Request.BodyReader.CompleteAsync();
+            var reqMsg = MessagePackSerializer.Deserialize<LoginReqMsg>(resultResult.Buffer);
+
+            var rsp = new LoginRspMsg() {
+                Id = reqMsg.Id + 1,
+                Account = reqMsg.Account,
+                Password = reqMsg.Password,
+                Token = Guid.NewGuid().ToString(),
+            };
+            var bytes = MessagePackSerializer.Serialize(rsp);
+            var writeResult = await HttpContext.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(bytes));
+            await HttpContext.Response.BodyWriter.CompleteAsync();
         }
     }
 }
