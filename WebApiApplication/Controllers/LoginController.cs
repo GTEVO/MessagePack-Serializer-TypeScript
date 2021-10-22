@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Buffers;
+using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using MessagePack;
 
@@ -50,19 +52,21 @@ namespace WebApiApplication.Controllers
         [HttpPost]
         public async Task LoginBin()
         {
-            var resultResult = await HttpContext.Request.BodyReader.ReadAsync();
-            await HttpContext.Request.BodyReader.CompleteAsync();
-            var reqMsg = MessagePackSerializer.Deserialize<LoginReqMsg>(resultResult.Buffer);
-
-            var rsp = new LoginRspMsg() {
-                Id = reqMsg.Id + 1,
-                Account = reqMsg.Account,
-                Password = reqMsg.Password,
-                Token = Guid.NewGuid().ToString(),
-            };
-            var bytes = MessagePackSerializer.Serialize(rsp);
-            var writeResult = await HttpContext.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(bytes));
-            await HttpContext.Response.BodyWriter.CompleteAsync();
+            using (var memoryStream = new MemoryStream()) {
+                await HttpContext.Request.BodyReader.CopyToAsync(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var reqMsg = MessagePackSerializer.Deserialize<LoginReqMsg>(memoryStream);
+                var rsp = new LoginRspMsg() {
+                    Id = reqMsg.Id + 1,
+                    Account = reqMsg.Account,
+                    Password = reqMsg.Password,
+                    Token = Guid.NewGuid().ToString(),
+                };
+                var bytes = MessagePackSerializer.Serialize(rsp);
+                await HttpContext.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(bytes));
+                await HttpContext.Response.BodyWriter.CompleteAsync();
+            }
         }
     }
 }
+
