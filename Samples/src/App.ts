@@ -4,7 +4,7 @@ import { test as networkTest } from "./TestByHttp";
 async function main() {
     localTest()
     console.log('====================== http test ======================')
-    await networkTest();
+    await networkTest(2, 'abc@ABC', '123');
 }
 
 main();

@@ -19,17 +19,17 @@ async function login(reqMsg: LoginReqMsg): Promise<LoginRspMsg> {
     return rspMsg
 }
 
-export async function test() {
+export async function test(id: number, account: string | null, password: string | null) {
     let msg = new LoginReqMsg()
 
-    msg.Id = 2
-    msg.account = 'abc'
-    msg.password = '123'
+    msg.Id = id
+    msg.account = account
+    msg.password = password
     let rspMsg = await login(msg)
-    console.log(rspMsg)
 
-    console.log(rspMsg.Id)
-    console.log(rspMsg.account)
-    console.log(rspMsg.password)
-    console.log(rspMsg.token)
+    console.log(rspMsg)
+    console.log(`id = ${rspMsg.Id}`)
+    console.log(`account = ${rspMsg.account}`)
+    console.log(`password = ${rspMsg.password}`)
+    console.log(`token = ${rspMsg.token}`)
 }
